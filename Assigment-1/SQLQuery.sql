@@ -1,0 +1,53 @@
+CREATE DATABASE my_db;
+USE my_db;
+CREATE SEQUENCE MySupplierID START WITH 100;
+CREATE SEQUENCE MYCategoryID START WITH 250;
+CREATE TABLE Products(
+						ProductID int IDENTITY(1,1) PRIMARY KEY,
+						ProductName varchar(50) DEFAULT 'Product',
+						SupplierID int DEFAULT NEXT VALUE FOR MySupplierID,
+						CategoryID int DEFAULT NEXT VALUE FOR MYCategoryID,
+						QuantityPerUnit int DEFAULT 500,
+						UnitPrice decimal(5,2) DEFAULT 0,
+						UnitsInStock int DEFAULT 0,
+						UnitsOnOrder int DEFAULT 0,
+						ReorderLevel int DEFAULT 100,
+						Discontinued bit DEFAULT 0
+					 );
+SELECT * FROM Products;
+INSERT INTO Products ( ProductName, UnitPrice, UnitsInStock, UnitsOnOrder, Discontinued) 
+VALUES  ('Product1',5,0,200,0),
+		('Product2',10,10,0,0),
+		('Product3',15,20,20,1),
+		('Product4',20,10,10,0),
+		('Product5',25,0,50,1),
+		('Product6',35,30,0,1),
+		('Product7',30,100,100,0),
+		('Product8',5,20,200,0),
+		('Product9',100,1,500,0),
+		('Product10',450,0,0,1),
+		('Product11',100,0,10,0),
+		('Product12',10,0,50,0);
+SELECT * FROM Products;
+-- Question 1
+SELECT ProductID, ProductName, UnitPrice
+FROM Products WHERE UnitPrice < 20;
+-- Question 2
+SELECT ProductID, ProductName, UnitPrice
+FROM Products WHERE UnitPrice BETWEEN 15 AND 25;
+-- Question 3
+SELECT * FROM Products;
+SELECT AVG(UnitPrice) AS PriceAverage FROM Products;
+SELECT ProductName, UnitPrice
+FROM Products WHERE UnitPrice > (SELECT AVG(UnitPrice) FROM Products);
+-- Question 4
+SELECT TOP 10 ProductName, UnitPrice
+FROM Products
+ORDER BY UnitPrice DESC
+-- Question 5
+SELECT Count(Discontinued) AS NUMBER_OF_PRODUCTS FROM Products;
+SELECT SUM(CASE WHEN Discontinued = 1 THEN 1 ELSE 0 END) AS NUMBER_OF_CURRENT_PRODUCTS FROM Products; 
+SELECT SUM(CASE WHEN Discontinued = 0 THEN 1 ELSE 0 END) AS NUMBER_OF_DISCONTINUED_PRODUCTS FROM Products;
+-- Question 6
+SELECT ProductName, UnitsOnOrder, UnitsInStock
+FROM Products WHERE UnitsInStock < UnitsOnOrder;
