@@ -1,0 +1,87 @@
+CREATE DATABASE Company_db;
+USE Company_db;
+CREATE TABLE salesman(
+						Salesman_id int IDENTITY(1,1) PRIMARY KEY,
+						Full_name varchar(50) DEFAULT 'anonymous',
+						City varchar(50) DEFAULT 'ahmedabad',
+						Commission decimal(5,2) DEFAULT 20
+					 );
+SELECT * FROM salesman;
+CREATE TABLE customer(
+						Customer_id int IDENTITY(1,1) PRIMARY KEY,
+						Cust_name varchar(50) DEFAULT 'anonymous',
+						City varchar(50) DEFAULT 'ahmedabad',
+						Grade int,
+						Salesman_id int FOREIGN KEY REFERENCES salesman(Salesman_id)
+					 );
+SELECT * FROM customer;
+CREATE TABLE orders (
+						Ord_no int,
+						Purch_amt decimal(10,2),
+						Ord_date date,
+						Customer_id int FOREIGN KEY REFERENCES customer(Customer_id),
+						Salesman_id int FOREIGN KEY REFERENCES salesman(Salesman_id)
+					);
+SELECT * FROM orders;
+
+INSERT INTO salesman ( Full_name, Commission) 
+VALUES  	('Person1',10),
+		('Person4',20),
+		('Person5',30);
+
+INSERT INTO salesman ( Full_name, City,Commission) 
+VALUES  	('Person2','junagadh',40),
+		('Person3','mumbai',50);
+SELECT * FROM salesman;
+
+INSERT INTO customer ( CUST_name, City,grade, Salesman_id) 
+VALUES  ('CUST1','ahmedabad',400,1),
+		('CUST2','mumbai',500,5),
+		('CUST3','ahmedabad',100,1),
+		('CUST4','kolkata',200,3),
+		('CUST5','ahmedabad',400,1),
+		('CUST6','junagadh',300,5),
+		('CUST7','anand',400,1),
+		('CUST8','mumbai',500,2),
+		('CUST9','ahmedabad',300,1),
+		('CUST10','mumbai',500,5);
+INSERT INTO customer ( grade, Salesman_id) 
+VALUES  	(NULL,1),
+		(100,2),
+		(300,3),
+		(NULL,1),
+		(500,2),
+		(300,4),
+		(NULL,4),
+		(600,2),
+		(200,5),
+		(NULL,4),
+		(600,2),
+		(200,5);
+SELECT * FROM customer;
+
+INSERT INTO orders( Purch_amt, Ord_date, Customer_id, Salesman_id) 
+VALUES  	(200.00 ,'2023-01-01',22,5),
+		(1200.00,'2023-01-01',22,4),
+		(2200.00,'2023-01-02',22,5),
+		(2050.00,'2023-01-02',22,3),
+		(2005.00,'2023-01-03',22,1),
+		(7200.00,'2023-01-04',22,2),
+		(2900.00,'2023-01-05',22,2),
+		(2000.00,'2023-01-05',22,5),
+		(200.00 ,'2023-01-05',22,3),
+		(100.00 ,'2023-01-06',22,3),
+		(2200.00,'2023-01-07',22,5),
+		(200.00 ,'2023-01-08',22,1),
+		(2030.00,'2023-01-09',22,1),
+		(4200.00,'2023-01-10',22,1),
+		(9200.00,'2023-01-10',22,4),
+		(1000.00,'2023-01-11',22,5),
+		(800.00 ,'2023-01-12',22,5),
+		(3000.00,'2023-01-12',22,2),
+		(20.00  ,'2023-01-12',22,4),
+		(100.00 ,'2023-01-12',22,3),
+		(300.00 ,'2023-01-13',22,2),
+		(2000.00,'2023-01-13',22,3),
+		(600.00 ,'2023-01-13',22,1);
+SELECT * FROM orders;
