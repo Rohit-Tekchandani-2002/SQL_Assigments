@@ -16,7 +16,7 @@ CREATE TABLE customer(
 					 );
 SELECT * FROM customer;
 CREATE TABLE orders (
-						Ord_no int,
+						Ord_no int IDENTITY(1,1) PRIMARY KEY,
 						Purch_amt decimal(10,2),
 						Ord_date date,
 						Customer_id int FOREIGN KEY REFERENCES customer(Customer_id),
@@ -62,26 +62,230 @@ SELECT * FROM customer;
 
 INSERT INTO orders( Purch_amt, Ord_date, Customer_id, Salesman_id) 
 VALUES  	(200.00 ,'2023-01-01',22,5),
-		(1200.00,'2023-01-01',22,4),
-		(2200.00,'2023-01-02',22,5),
-		(2050.00,'2023-01-02',22,3),
-		(2005.00,'2023-01-03',22,1),
-		(7200.00,'2023-01-04',22,2),
-		(2900.00,'2023-01-05',22,2),
-		(2000.00,'2023-01-05',22,5),
-		(200.00 ,'2023-01-05',22,3),
-		(100.00 ,'2023-01-06',22,3),
-		(2200.00,'2023-01-07',22,5),
-		(200.00 ,'2023-01-08',22,1),
-		(2030.00,'2023-01-09',22,1),
-		(4200.00,'2023-01-10',22,1),
-		(9200.00,'2023-01-10',22,4),
-		(1000.00,'2023-01-11',22,5),
-		(800.00 ,'2023-01-12',22,5),
-		(3000.00,'2023-01-12',22,2),
-		(20.00  ,'2023-01-12',22,4),
-		(100.00 ,'2023-01-12',22,3),
-		(300.00 ,'2023-01-13',22,2),
-		(2000.00,'2023-01-13',22,3),
-		(600.00 ,'2023-01-13',22,1);
+		(1200.00,'2023-01-01',2,4),
+		(2200.00,'2023-01-02',21,5),
+		(2050.00,'2023-01-02',20,3),
+		(2005.00,'2023-01-03',1,1),
+		(7200.00,'2023-01-04',3,2),
+		(2900.00,'2023-01-05',12,2),
+		(2000.00,'2023-01-05',11,5),
+		(200.00 ,'2023-01-05',9,3),
+		(100.00 ,'2023-01-06',6,3),
+		(2200.00,'2023-01-07',10,5),
+		(200.00 ,'2023-01-08',8,1),
+		(2030.00,'2023-01-09',5,1),
+		(4200.00,'2023-01-10',4,1),
+		(9200.00,'2023-01-10',7,4),
+		(1000.00,'2023-01-11',8,5),
+		(800.00 ,'2023-01-12',10,5),
+		(3000.00,'2023-01-12',2,2),
+		(20.00  ,'2023-01-12',12,4),
+		(100.00 ,'2023-01-12',3,3),
+		(300.00 ,'2023-01-13',13,2),
+		(2000.00,'2023-01-13',15,3),
+		(600.00 ,'2023-01-13',14,1);
 SELECT * FROM orders;
+
+--Question 1
+SELECT Full_name as salesman, Cust_name as customer, customer.City as city
+FROM customer INNER JOIN salesman
+ON salesman.City = customer.City;
+
+--Question 2
+SELECT Ord_no, Purch_amt, Cust_name, customer.City as city
+FROM orders INNER JOIN customer
+ON orders.Customer_id = customer.Customer_id
+WHERE Purch_amt > 2000;
+
+--Question 3
+SELECT Cust_name as customer, customer.City as city,Full_name as salesman, Commission
+FROM customer INNER JOIN salesman
+ON salesman.Salesman_id = customer.Salesman_id;
+
+--Question 4
+SELECT Cust_name as customer, customer.City as city,Full_name as salesman, Commission
+FROM customer INNER JOIN salesman
+ON salesman.Salesman_id = customer.Salesman_id
+WHERE Commission > 12;
+
+--Question 5
+SELECT Cust_name as customer, customer.City as customers_city,Full_name as salesman, salesman.City as salesmans_city,Commission
+FROM customer INNER JOIN salesman
+ON salesman.Salesman_id = customer.Salesman_id
+WHERE salesman.City != customer.City AND Commission > 12;
+
+--Question 6
+SELECT
+  Ord_no, 
+  Ord_date,
+  Purch_amt,
+  Cust_name,
+  Grade,
+  Full_name as salesman,
+  Commission
+FROM customer 
+JOIN salesman
+  ON salesman.Salesman_id = customer.Salesman_id
+JOIN orders 
+  ON orders.Customer_id  = customer.Customer_id;
+
+--Question 7
+SELECT
+	salesman.Salesman_id,
+	salesman.City,
+	customer.Customer_id,
+	Ord_no,
+	Purch_amt,
+	Ord_date,
+	Cust_name,
+	Grade,
+	Full_name as salesman,
+	Commission
+FROM customer 
+JOIN salesman
+  ON salesman.Salesman_id = customer.Salesman_id
+JOIN orders 
+  ON orders.Customer_id  = customer.Customer_id;
+
+--Question 8
+--The ORDER BY keyword sorts the records in ascending order by default.
+SELECT Cust_name as customer, customer.City as customer_city,
+	   Grade,Full_name as salesman, salesman.City as salesman_city
+FROM customer INNER JOIN salesman
+ON salesman.Salesman_id = customer.Salesman_id
+ORDER BY Customer_id ASC;
+
+--Question 9
+--The ORDER BY keyword sorts the records in ascending order by default.
+SELECT Cust_name as customer, customer.City as customer_city,
+	   Grade,Full_name as salesman, salesman.City as salesman_city
+FROM customer INNER JOIN salesman
+ON salesman.Salesman_id = customer.Salesman_id
+WHERE Grade < 300
+ORDER BY Customer_id ASC;
+
+--Question 10
+SELECT
+  Cust_name,
+  customer.City,
+  Ord_no, 
+  Ord_date,
+  Purch_amt
+FROM customer  
+LEFT JOIN orders
+  ON orders.Customer_id = customer.Customer_id
+ORDER BY Ord_date ASC;
+
+INSERT INTO orders
+VALUES (200.00 ,  '2023-01-01',22,NULL),
+	(99999.99 ,'2023-01-02',20,NULL);
+SELECT * FROM orders;
+
+--Question 11
+SELECT
+  Ord_no, 
+  Ord_date,
+  Purch_amt,
+  Cust_name,
+  Grade,
+  Full_name as salesman,
+  Commission
+FROM orders 
+LEFT JOIN salesman
+  ON salesman.Salesman_id = orders.Salesman_id
+RIGHT JOIN customer 
+  ON orders.Customer_id  = customer.Customer_id
+  ORDER BY Ord_date ASC;
+
+--Question 12
+SELECT Full_name as salesman_name, Cust_name as customer_name
+FROM salesman LEFT JOIN customer
+ON salesman.Salesman_id = customer.Salesman_id
+ORDER BY salesman.Full_name;
+
+
+--Question 13
+SELECT Full_name AS sales_person , Cust_name AS customer_name, 
+	   salesman.City, Grade, Ord_no, Ord_date,Purch_amt 
+FROM orders
+JOIN customer
+ON orders.Customer_id = customer.Customer_id
+JOIN salesman
+ON salesman.Salesman_id = orders.Salesman_id
+ORDER BY Full_name ASC;
+
+--Question 14
+SELECT Full_name AS sales_person , Cust_name AS customer_name, 
+	   salesman.City, Grade, Ord_no, Ord_date,Purch_amt
+FROM salesman  
+JOIN customer  
+ON salesman.Salesman_id=customer.Salesman_id 
+JOIN orders 
+ON orders.Customer_id= customer.Customer_id 
+WHERE Purch_amt < 2000 
+UNION
+SELECT Full_name AS sales_person , Cust_name AS customer_name, 
+	   salesman.City, Grade, Ord_no, Ord_date,Purch_amt
+FROM salesman  
+JOIN customer  
+ON salesman.Salesman_id=customer.Salesman_id 
+JOIN orders 
+ON orders.Customer_id= customer.Customer_id 
+WHERE Purch_amt >= 2000 
+AND Grade IS NOT NULL;
+
+--Question 15
+SELECT Full_name AS sales_person , Cust_name AS customer_name, 
+	   salesman.City, Grade, Ord_no, Ord_date,Purch_amt
+FROM salesman  
+JOIN customer  
+ON salesman.Salesman_id=customer.Salesman_id 
+JOIN orders 
+ON orders.Customer_id= customer.Customer_id 
+WHERE Purch_amt < 2000 
+UNION ALL 
+SELECT Full_name AS sales_person , Cust_name AS customer_name, 
+	   salesman.City, Grade, Ord_no, Ord_date,Purch_amt
+FROM salesman  
+JOIN customer  
+ON salesman.Salesman_id=customer.Salesman_id 
+JOIN orders 
+ON orders.Customer_id= customer.Customer_id 
+WHERE Purch_amt >= 2000 
+AND Grade IS NOT NULL;
+
+--Question 16
+SELECT Cust_name, City, Ord_no, Ord_date, Purch_amt
+FROM customer
+LEFT JOIN orders
+ON customer.Customer_id = orders.Customer_id
+WHERE Grade IS NOT NULL AND Ord_no IS NOT NULL
+UNION
+SELECT Cust_name, City, Ord_no, Ord_date, Purch_amt
+FROM customer
+LEFT JOIN orders
+ON customer.Customer_id = orders.Customer_id
+WHERE Grade IS NULL AND Ord_no IS NULL;
+
+--Question 17
+SELECT * FROM salesman CROSS JOIN customer;
+
+--Question 18
+SELECT * 
+FROM salesman  
+CROSS JOIN  customer 
+WHERE salesman.City IS NOT NULL;
+
+--Question 19
+SELECT * 
+FROM salesman  
+CROSS JOIN  customer 
+WHERE salesman.City IS NOT NULL 
+AND Grade IS NOT NULL;
+
+--Question 20
+SELECT * 
+FROM salesman  
+CROSS JOIN  customer 
+WHERE salesman.City != customer.City 
+AND Grade IS NOT NULL;
